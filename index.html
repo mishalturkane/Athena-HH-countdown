@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Athena Hacker House Countdown</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Radio+Canada+Big:ital,wght@0,400..700;1,400..700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+      html {
+        height: 100%;
+      }
+      body {
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #eee;
+        font-family: "Radio Canada Big", sans-serif;
+      }
+
+      .flip-clock {
+        text-align: center;
+        perspective: 400px;
+        margin: 20px auto;
+      }
+
+      .flip-clock *,
+      .flip-clock *:before,
+      .flip-clock *:after {
+        box-sizing: border-box;
+      }
+
+      .flip-clock__piece {
+        display: inline-block;
+        margin: 0 5px;
+      }
+
+      .flip-clock__slot {
+        font-size: 2vw;
+      }
+
+      .card {
+        display: block;
+        position: relative;
+        padding-bottom: 0.72em;
+        font-size: 9vw;
+        line-height: 0.95;
+      }
+
+      .card__top,
+      .card__bottom,
+      .card__back::before,
+      .card__back::after {
+        display: block;
+        height: 0.72em;
+        color: #ccc;
+        background: #222;
+        padding: 0.25em 0.25em;
+        border-radius: 0.15em 0.15em 0 0;
+        backface-visibility: hidden;
+        transform-style: preserve-3d;
+        width: 1.8em;
+        transform: translateZ(0);
+      }
+
+      .card__bottom {
+        color: #fff;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        border-top: solid 1px #000;
+        background: #393939;
+        border-radius: 0 0 0.15em 0.15em;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .card__bottom::after {
+        display: block;
+        margin-top: -0.72em;
+      }
+
+      .card__back::before,
+      .card__bottom::after {
+        content: attr(data-value);
+      }
+
+      .card__back {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        left: 0%;
+        pointer-events: none;
+      }
+
+      .card__back::before {
+        position: relative;
+        z-index: -1;
+        overflow: hidden;
+      }
+
+      .flip .card__back::before {
+        animation: flipTop 0.3s cubic-bezier(0.37, 0.01, 0.94, 0.35);
+        animation-fill-mode: both;
+        transform-origin: center bottom;
+      }
+
+      .flip .card__back .card__bottom {
+        transform-origin: center top;
+        animation-fill-mode: both;
+        animation: flipBottom 0.6s cubic-bezier(0.15, 0.45, 0.28, 1);
+      }
+       /* Apply Space Grotesk only to share-card */
+  .share-card {
+    font-family: 'Space Grotesk', sans-serif;
+    max-width: 600px;
+    background: white;
+    padding: 20px;
+    margin-top: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    text-align: center;
+    line-height: 1.6;
+  }
+  .share-card h2 {
+    margin-bottom: 12px;
+    font-size: 1.8rem;
+  }
+  .share-card p {
+    margin: 8px 0;
+  }
+  .share-card a {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 10px 20px;
+    background: #1DA1F2;
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.2s;
+  }
+  .share-card a:hover {
+    background: #0d8ddb;
+  }
+
+      @keyframes flipTop {
+        0% {
+          transform: rotateX(0deg);
+          z-index: 2;
+        }
+        0%,
+        99% {
+          opacity: 0.99;
+        }
+        100% {
+          transform: rotateX(-90deg);
+          opacity: 0;
+        }
+      }
+
+      @keyframes flipBottom {
+        0%,
+        50% {
+          z-index: -1;
+          transform: rotateX(90deg);
+          opacity: 0;
+        }
+        51% {
+          opacity: 0.99;
+        }
+        100% {
+          opacity: 0.99;
+          transform: rotateX(0deg);
+          z-index: 5;
+        }
+      }
+
+      /* 🔥 New Share Card */
+      .share-card {
+        max-width: 600px;
+        background: white;
+        padding: 20px;
+        margin-top: 30px;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        text-align: center;
+        line-height: 1.6;
+      }
+      .share-card h2 {
+        margin-bottom: 12px;
+        font-size: 1.8rem;
+      }
+      .share-card p {
+        margin: 8px 0;
+      }
+      .share-card a {
+        display: inline-block;
+        margin-top: 16px;
+        padding: 10px 20px;
+        background: #1da1f2;
+        color: #fff;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background 0.2s;
+      }
+      .share-card a:hover {
+        background: #0d8ddb;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      console.clear();
+
+      function CountdownTracker(label, value) {
+        var el = document.createElement("span");
+        el.className = "flip-clock__piece";
+        el.innerHTML =
+          '<b class="flip-clock__card card">' +
+          '<b class="card__top"></b>' +
+          '<b class="card__bottom"></b>' +
+          '<b class="card__back"><b class="card__bottom"></b></b>' +
+          "</b>" +
+          '<span class="flip-clock__slot">' +
+          label +
+          "</span>";
+
+        this.el = el;
+
+        var top = el.querySelector(".card__top"),
+          bottom = el.querySelector(".card__bottom"),
+          back = el.querySelector(".card__back"),
+          backBottom = el.querySelector(".card__back .card__bottom");
+
+        this.update = function (val) {
+          val = ("0" + val).slice(-2);
+          if (val !== this.currentValue) {
+            if (this.currentValue >= 0) {
+              back.setAttribute("data-value", this.currentValue);
+              bottom.setAttribute("data-value", this.currentValue);
+            }
+            this.currentValue = val;
+            top.innerText = this.currentValue;
+            backBottom.setAttribute("data-value", this.currentValue);
+
+            this.el.classList.remove("flip");
+            void this.el.offsetWidth;
+            this.el.classList.add("flip");
+          }
+        };
+        this.update(value);
+      }
+
+      function getTimeRemaining(endtime) {
+        var t = Date.parse(endtime) - Date.parse(new Date());
+        return {
+          Total: t,
+          Days: Math.floor(t / (1000 * 60 * 60 * 24)),
+          Hours: Math.floor((t / (1000 * 60 * 60)) % 24),
+          Minutes: Math.floor((t / 1000 / 60) % 60),
+          Seconds: Math.floor((t / 1000) % 60),
+        };
+      }
+
+      function getTime() {
+        var t = new Date();
+        return {
+          Total: t,
+          Hours: t.getHours() % 12,
+          Minutes: t.getMinutes(),
+          Seconds: t.getSeconds(),
+        };
+      }
+
+      function Clock(countdown, callback) {
+        countdown = countdown ? new Date(Date.parse(countdown)) : false;
+        callback = callback || function () {};
+        var updateFn = countdown ? getTimeRemaining : getTime;
+
+        this.el = document.createElement("div");
+        this.el.className = "flip-clock";
+
+        var trackers = {},
+          t = updateFn(countdown),
+          key,
+          timeinterval;
+
+        for (key in t) {
+          if (key === "Total") {
+            continue;
+          }
+          trackers[key] = new CountdownTracker(key, t[key]);
+          this.el.appendChild(trackers[key].el);
+        }
+
+        var i = 0;
+        function updateClock() {
+          timeinterval = requestAnimationFrame(updateClock);
+          if (i++ % 10) {
+            return;
+          }
+          var t = updateFn(countdown);
+          if (t.Total < 0) {
+            cancelAnimationFrame(timeinterval);
+            for (key in trackers) {
+              trackers[key].update(0);
+            }
+            callback();
+            return;
+          }
+          for (key in trackers) {
+            trackers[key].update(t[key]);
+          }
+        }
+        setTimeout(updateClock, 500);
+      }
+
+      var deadline = new Date("September 24, 2025 06:00:00");
+      var c = new Clock(deadline, function () {
+        alert("countdown complete");
+      });
+      document.body.appendChild(c.el);
+
+      // 🔥 Event Share Card
+      var share = document.createElement("div");
+      share.className = "share-card";
+      share.innerHTML = `
+  <h2>🚀 Athena Hacker House 2025</h2>
+  <p><strong>Date:</strong> 24–25 September<br><strong>Venue:</strong> New Delhi</p>
+  <p>Powered by: @monad Foundation</p>
+  <p>Athena Hacker House will be a full-stretch, no-sleep event — hackathon, founders’ calls, cricket, bonfire, pool party, DJ sundowner & much more!</p>
+  <p>Built for developers, by developers. Breaking all hackathon models & setting new benchmarks!</p>
+  <a id="tweetBtn" href="#" target="_blank">Post on X</a>
+`;
+
+      // Append share card
+      document.body.appendChild(share);
+
+      // 🕒 Dynamic Tweet Button
+      document
+        .getElementById("tweetBtn")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+
+          var t = getTimeRemaining(deadline);
+          var counterText = `${t.Days}d ${t.Hours}h ${t.Minutes}m ${t.Seconds}s`;
+
+          var tweetText = `🚀 Countdown Alert! Only ${counterText} left until Athena Hacker House 2025! 🌟
+
+Join the brightest minds in New Delhi on 24-25 Sep for innovation, networking & epic hacks! 💻⚡
+
+let’s make history together! LFG! 🚀
+
+hosted by @AthenaF0SS x @NikhilEth
+Powered by @monad Foundation`;
+
+          var tweetUrl =
+            "https://twitter.com/intent/tweet?text=" +
+            encodeURIComponent(tweetText);
+          window.open(tweetUrl, "_blank");
+        });
+
+      document.body.appendChild(share);
+    </script>
+  </body>
+</html>
