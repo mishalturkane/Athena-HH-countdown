@@ -264,16 +264,16 @@
         this.update(value);
       }
 
-      function getTimeRemaining(endtime) {
-        var t = Date.parse(endtime) - Date.parse(new Date());
-        return {
-          Total: t,
-          Days: Math.floor(t / (1000 * 60 * 60 * 24)),
-          Hours: Math.floor((t / (1000 * 60 * 60)) % 24),
-          Minutes: Math.floor((t / 1000 / 60) % 60),
-          Seconds: Math.floor((t / 1000) % 60),
-        };
-      }
+     function getTimeRemaining(endtime) {
+  var t = Date.parse(endtime) - Date.parse(new Date());
+  return {
+    Total: t,
+    Hours: Math.floor(t / (1000 * 60 * 60)),  // Total hours, not modulo 24
+    Minutes: Math.floor((t / 1000 / 60) % 60),
+    Seconds: Math.floor((t / 1000) % 60),
+  };
+}
+
 
       function getTime() {
         var t = new Date();
@@ -328,7 +328,8 @@
         setTimeout(updateClock, 500);
       }
 
-      var deadline = new Date("September 24, 2025 06:00:00");
+      var deadline = new Date("September 24, 2025 09:30:00");
+
       var c = new Clock(deadline, function () {
         alert("countdown complete");
       });
@@ -339,8 +340,8 @@
       share.className = "share-card";
       share.innerHTML = `
   <h2>🚀 Athena Hacker House 2025</h2>
-  <p><strong>Date:</strong> 24–25 September<br><strong>Venue:</strong> New Delhi</p>
-  <p>Powered by: @monad Foundation</p>
+  <p>starting on - 24-09-2025 , 09:30 AM, New Delhi</p>
+  <p>Powered by: @monad Foundation x @AthenaFOSS</p>
   <p>Athena Hacker House will be a full-stretch, no-sleep event — hackathon, founders’ calls, cricket, bonfire, pool party, DJ sundowner & much more!</p>
   <p>Built for developers, by developers. Breaking all hackathon models & setting new benchmarks!</p>
   <a id="tweetBtn" href="#" target="_blank">Post on X</a>
@@ -356,7 +357,8 @@
           e.preventDefault();
 
           var t = getTimeRemaining(deadline);
-          var counterText = `${t.Days}d ${t.Hours}h ${t.Minutes}m ${t.Seconds}s`;
+       var counterText = `${t.Hours}h ${t.Minutes}m ${t.Seconds}s`;
+
 
           var tweetText = `🚀 Countdown Alert! Only ${counterText} left until Athena Hacker House 2025! 🌟
 
